@@ -19,8 +19,8 @@
  (depends
   (ocaml (>= 4.08.0))
   (dune (>= 3.0.0))
-  terminal_size
-  (cmdliner (= 1.0.2))
-  (ounit :with-test)
-  (ounit2 :with-test)
-  (alcotest :with-test)))
+  (terminal_size (>= 0.2.0))
+  (cmdliner (>= 1.1.0))
+  (ounit (and (>= 2.2.6) :with-test))
+  (ounit2 (and (>= 2.2.6) :with-test))
+  (alcotest (and (>= 1.6.0) :with-test))))

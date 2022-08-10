@@ -1,8 +1,7 @@
 open Cmdliner
 let version = "0.6.1"
 let sdocs = Manpage.s_common_options
-let exits = Term.default_exits
-
+let exits = Cmd.Exit.defaults
 
 let help_secs = [
  `S Manpage.s_common_options;
@@ -11,7 +10,6 @@ let help_secs = [
  `P "Use `$(mname) $(i,COMMAND) --help' for help on a single command.";`Noblank;
  `S Manpage.s_bugs; `P "Check bug reports at http://bugs.example.org.";
 ]
-
 
 let gen_opts context sort nocache framework cache_dir ignore only ignore_path mods runner targets =
   let mods =
@@ -47,7 +45,6 @@ module My_doc = struct
   let runner      = "Custom framework runner. This option replaces the parameter --framework"
 end
 
-
 let gen_opts_t =
   let docs = "Generate source code for test executable with appropriate code to bootstrap a test framework" in
   let open Arg in
@@ -72,16 +69,15 @@ let init_opts_t =
     Arg.(value & pos 0 string "alcotest" & info [] ~docv:"FRAMEWORK" ~doc:My_doc.framework) in
   Term.(const init_opts $ framework)
 
-
 let init_cmd =
 let doc = "The entrypoint of dryunit. To create a test suite, you can run: " ^
   "`dryunit init > tests/jbuild` and you are all set. Detection should be " ^
   "working and tests should be executed with `jbuilder runtest`. " ^
   "To run a particular test generated with `dryunit init` passing parameters, " ^
   "it's enough to run `jbuilder exec path/to/tests/main.exe -- --param1 --param2`" in
-  Term.(ret (const Action.init_executable $ init_opts_t)),
-  Term.info "init" ~doc ~sdocs ~exits
-
+  Cmd.v
+  (Cmd.info "init" ~doc ~sdocs ~exits)
+  (Term.(ret (const Action.init_executable $ init_opts_t)))
 
 let gen_cmd =
   let doc =
@@ -90,9 +86,9 @@ let gen_cmd =
     the jbuilder configuration responsible for setting up the bootstrap code gen.
     Also, it's not advised to execute `dryunit gen` from a directory in source " ^
     "control, because it generates compilation artifacts." in
-  Term.(ret (const Action.gen_executable $ gen_opts_t)),
-  Term.info "gen" ~doc ~sdocs ~exits
-
+  Cmd.v
+  (Cmd.info "gen" ~doc ~sdocs ~exits)
+  (Term.(ret (const Action.gen_executable $ gen_opts_t)))
 
 let help_cmd =
   let topic =
@@ -104,16 +100,13 @@ get help on. `topics' lists the topics." in
     Arg.(value & pos 0 (some string) None & info [] ~docv:"TOPIC" ~doc)
   in
   let doc = "show help" in
-  Term.(ret
-    (const Action.help $ Arg.man_format $ Term.choice_names $ topic)),
-  Term.info "help" ~doc ~exits:Term.default_exits
-
+  Cmd.v
+  (Cmd.info "help" ~doc ~exits:Cmd.Exit.defaults)
+  ( Term.(ret
+    (const Action.help $ Arg.man_format $ Term.choice_names $ topic)))
 
 let default_cmd ~version =
-  let doc = "a detection tool for traditional testing in OCaml" in
-  Term.(ret (const (fun _ -> `Help (`Pager, None)) $ const ())),
-  Term.info "dryunit" ~version ~doc ~sdocs ~exits ~man:help_secs
-
+  Term.(ret (const (fun _ -> `Help (`Pager, None)) $ const ()))
 
 let cmds =
   [ init_cmd
@@ -121,7 +114,10 @@ let cmds =
   ; help_cmd
   ]
 
-
 let () =
   Random.self_init ();
-  Cmdliner.Term.(exit @@ eval_choice (default_cmd ~version) cmds)
+  let _ = Cmd.group in
+  let doc = "a detection tool for traditional testing in OCaml" in
+  let info = Cmd.info "dryunit" ~version ~doc ~sdocs ~exits ~man:help_secs in
+  Stdlib.exit @@ Cmd.eval @@ Cmd.group ~default:(default_cmd ~version) info cmds
+
