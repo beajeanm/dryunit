@@ -133,8 +133,7 @@ let print_loc suite test =
 
 
 (* XXX: this code is completely static at this point *)
-let print_error ((module Theme):Theme.t) suite test e =
-  let open Theme.Colors in
+let print_error ((module Theme):Theme.t) _suite _test _e =
   let long_assertion () =
     let exp = "A message that should not be put in a long sentence" in
     eprintf {|
@@ -156,7 +155,7 @@ let print_error ((module Theme):Theme.t) suite test e =
   else
     long_assertion ()
 
-let run ?(colors=true) ?(name="Main") suites =
+let run ?(colors=true) ?(_name="Main") suites =
   let no_colors_env =
     ( try (let _ = Unix.getenv "NOCOLORS" in true)
       with Not_found -> false

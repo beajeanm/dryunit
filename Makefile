@@ -1,22 +1,46 @@
-INSTALL_ARGS := $(if $(PREFIX),--prefix stty$(PREFIX),)
+.DEFAULT_GOAL := all
 
-default:
-	@jbuilder build @install
+.PHONY: all
+all:
+	opam exec -- dune build --root . @install
 
-install:
-	jbuilder install $(INSTALL_ARGS)
+.PHONY: deps
+deps: ## Install development dependencies
+	opam install -y dune-release ocamlformat utop ocaml-lsp-server
+	opam install --deps-only --with-test --with-doc -y .
 
-uninstall:
-	jbuilder uninstall $(INSTALL_ARGS)
+.PHONY: create_switch
+create_switch:
+	opam switch create . --no-install
 
-reinstall: uninstall reinstall
+.PHONY: switch
+switch: create_switch deps ## Create an opam switch and install development dependencies
 
-clean:
-	@jbuilder clean
+.PHONY: build
+build: ## Build the project, including non installable libraries and executables
+	opam exec -- dune build --root .
 
-test:
-	@#NOCOLORS=1 jbuilder runtest
-	@jbuilder runtest
+.PHONY: install
+install: all ## Install the packages on the system
+	opam exec -- dune install --root .
 
+.PHONY: test
+test: ## Run the unit tests
+	opam exec -- dune test --root .
 
-.PHONY: default install uninstall reinstall clean test
+.PHONY: clean
+clean: ## Clean build artifacts and other generated files
+	opam exec -- dune clean --root .
+
+.PHONY: doc
+doc: ## Generate odoc documentation
+	opam exec -- dune build --root . @doc
+
+.PHONY: fmt
+fmt: ## Format the codebase with ocamlformat
+	opam exec -- dune build --root . --auto-promote @fmt
+
+.PHONY: utop
+utop: ## Run a REPL and link with the project's libraries
+	opam exec -- dune utop --root . lib -- -implicit-bindings
+

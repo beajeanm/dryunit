@@ -45,7 +45,7 @@ let is_error =  function
   | Ok _ -> fail Not_error
   | Error _ -> ()
 
-let empty_list l = function
+let empty_list _ignored = function
   | [] -> ()
   | _ -> fail Not_empty_list
 
