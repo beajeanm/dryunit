@@ -1,7 +1,3 @@
-open Model
-
-
-
 let expected_mods ?(msg="") ~path expected =
   let len =
     Mods_parser.list_of_path path

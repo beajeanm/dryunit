@@ -21,7 +21,7 @@ module Modifiers = struct
     | "result" -> Some Result_mod
     | "opt"    -> Some Option_mod
     | "option" -> Some Option_mod
-    | other    -> None
+    | _other    -> None
 
   let to_string = function
     | Async_mod  -> "async"
@@ -39,7 +39,7 @@ module TestDescription = struct
     ; test_mods  : Modifiers.activated
     }
 
-  let active_mods ~activated_mods:a { test_mods = m }  =
+  let active_mods ~activated_mods:a { test_mods = m; _ }  =
     Modifiers.(
     { async  = a.async  && m.async
     ; result = a.result && m.result
