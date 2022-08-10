@@ -20,4 +20,7 @@
   (ocaml (>= 4.08.0))
   (dune (>= 3.0.0))
   terminal_size
-  (cmdliner (= 1.0.2))))
+  (cmdliner (= 1.0.2))
+  (ounit :with-test)
+  (ounit2 :with-test)
+  (alcotest :with-test)))
