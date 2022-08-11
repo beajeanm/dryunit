@@ -20,8 +20,8 @@
     ;; --ignore-path "space separated list"
     ))))
 
-(alias
- (name runtest)
+(rule
+ (alias runtest)
  (deps
   (:< main.exe))
  (action

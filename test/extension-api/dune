@@ -23,8 +23,8 @@
     --mods
     "async result long"))))
 
-(alias
- (name runtest)
+(rule
+ (alias runtest)
  (deps
   (:< main.exe))
  (action

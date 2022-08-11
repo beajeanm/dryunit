@@ -3,6 +3,7 @@
  (libraries dryunit))
 
 (rule
+ (alias gentests)
  (targets main.ml)
  (deps
   (glob_files {tests.ml,*tests.ml,*Tests.ml}))

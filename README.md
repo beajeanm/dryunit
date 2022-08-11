@@ -78,25 +78,30 @@ jbuilder exec tests/main.exe -- -v
 This is the output of the command `dryunit init`:
 
 ```
-(executables
- ((names (main))
-  (libraries (alcotest))))
+(executable
+ (name main)
+  (libraries alcotest))
 
 (rule
- ((targets (main.ml))
-  (deps ( (glob_files {tests.ml,*tests.ml,*Tests.ml}) ))
-  (action  (with-stdout-to ${@} (run dryunit gen
+ (target main.ml)
+  (deps  (glob_files {tests.ml,*tests.ml,*Tests.ml}) )
+  (action (with-stdout-to %{target} (run dryunit gen
     --framework alcotest
     ;; --filter "space separated list"
     ;; --ignore "space separated list"
     ;; --ignore-path "space separated list"
-  )))))
 
-(alias
-  ((name runtest)
-   (deps (main.exe))
-   (action (run ${<}))
-  ))
+    ;; Active modifiers (detected through name filtering):
+    ;; --mods "async opt result long"
+
+    ;; Custom framework (remove --framework before enabling it):
+    ;; --runner "Dryspec.Runner"
+  ))))
+
+(rule
+  (alias runtest)
+   (deps (:main main.exe))
+   (action (run %{main})))
 ```
 
 As you see, this is the place to customize how the detection should behave is this file. The definitions in the comments provide a template for common filters, but you can find more information about customizations using `dryunit help` or `dryunit COMMAND - - help`.

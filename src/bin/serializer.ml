@@ -120,13 +120,13 @@ let boot_generic ~context ~runner ~mods:activated_mods oc suites : unit =
 let init_default framework =
   print_endline @@ String.trim @@ "
 (executable
- ((name main)
-  (libraries (" ^ TestFramework.package framework ^ "))))
+ (name main)
+  (libraries " ^ TestFramework.package framework ^ "))
 
 (rule
- ((targets (main.ml))
-  (deps ( (glob_files {tests.ml,*tests.ml,*Tests.ml}) ))
-  (action (with-stdout-to ${@} (run dryunit gen
+ (target main.ml)
+  (deps (glob_files {tests.ml,*tests.ml,*Tests.ml}))
+  (action (with-stdout-to %{target} (run dryunit gen
     --framework " ^ TestFramework.to_string framework ^ "
     ;; --filter \"space separated list\"
     ;; --ignore \"space separated list\"
@@ -137,11 +137,10 @@ let init_default framework =
 
     ;; Custom framework (remove --framework before enabling it):
     ;; --runner \"Dryspec.Runner\"
-  )))))
+  ))))
 
-(alias
-  ((name runtest)
-   (deps (main.exe))
-   (action (run ${<}))
-  ))
+(rule
+  (alias runtest)
+   (deps (:main main.exe))
+   (action (run %{main})))
 "

@@ -11,8 +11,8 @@
    %{targets}
    (run ../../../src/bin/main.exe gen --framework ounit --sort --context))))
 
-(alias
- (name runtest)
+(rule
+ (alias runtest)
  (deps
   main.exe
   (file main.expected))

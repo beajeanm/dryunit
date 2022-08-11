@@ -1,7 +1,4 @@
 (library
  (name dryunit)
  (public_name dryunit)
- (libraries
-  terminal_size
-  unix
-))
+ (libraries terminal_size unix))
