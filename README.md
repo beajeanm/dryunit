@@ -46,11 +46,11 @@ Install the command line in your system:
 opam install dryunit
 ```
 
-Dryunit works with jbuilder out of the box:
+Dryunit works with dune out of the box:
 
 ```
 mkdir tests
-dryunit init > tests/jbuild
+dryunit init > tests/dune
 ```
 
 *(Tip: You can also make the framework explicit by using `dryunit init alcotest`.)*
@@ -60,15 +60,15 @@ dryunit init > tests/jbuild
 No other configuration is required. When you are ready to run the tests, run:
 
 ````
-jbuilder runtest
+dune runtest
 ````
 
 
 
-Sometimes you will want to execute a specific test executable passing some parameters. We do that for various reasons, like changing verbosity or output format. By default, all dryunit tests executables are called `main.exe`, so if you want to run a test passing a parameter, you can use `jbuilder exec`:
+Sometimes you will want to execute a specific test executable passing some parameters. We do that for various reasons, like changing verbosity or output format. By default, all dryunit tests executables are called `main.exe`, so if you want to run a test passing a parameter, you can use `dune exec`:
 
 ```
-jbuilder exec tests/main.exe -- -v
+dune exec tests/main.exe -- -v
 ```
 
 

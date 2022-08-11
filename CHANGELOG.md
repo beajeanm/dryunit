@@ -1,6 +1,12 @@
 Changelog
 =========
 
+0.7.0
+-----
+  * Make `dryunit init` compatible with dune lang 2.0 and above
+  * Remove all references to jbuilder in the documentation
+  * Update all the dependencies to more recent versions, dryunit now requires ocaml 4.08+
+
 0.6.0
 -----
 

@@ -72,9 +72,9 @@ let init_opts_t =
 let init_cmd =
 let doc = "The entrypoint of dryunit. To create a test suite, you can run: " ^
   "`dryunit init > tests/jbuild` and you are all set. Detection should be " ^
-  "working and tests should be executed with `jbuilder runtest`. " ^
+  "working and tests should be executed with `dune runtest`. " ^
   "To run a particular test generated with `dryunit init` passing parameters, " ^
-  "it's enough to run `jbuilder exec path/to/tests/main.exe -- --param1 --param2`" in
+  "it's enough to run `dune exec path/to/tests/main.exe -- --param1 --param2`" in
   Cmd.v
   (Cmd.info "init" ~doc ~sdocs ~exits)
   (Term.(ret (const Action.init_executable $ init_opts_t)))
@@ -83,7 +83,7 @@ let gen_cmd =
   let doc =
     "Generate bootstrap code for the main executable. " ^
     "The entrypoint for dryunit is the command `dryunit init`, which generates
-    the jbuilder configuration responsible for setting up the bootstrap code gen.
+    the dune configuration responsible for setting up the bootstrap code gen.
     Also, it's not advised to execute `dryunit gen` from a directory in source " ^
     "control, because it generates compilation artifacts." in
   Cmd.v
